@@ -6,6 +6,7 @@ from sqlalchemy import create_engine, text
 from settings import ServerConfig
 from sqlparse.sql import IdentifierList, Identifier
 from sqlparse.tokens import Keyword
+import os
 
 # regex to capture up to three dot-separated identifier parts (supports `quote`, "quote", [brackets], or plain names)
 IDENT_RE = re.compile(
@@ -20,8 +21,19 @@ def get_db_connection():
   url = config.db_url or os.environ.get("REDSHIFT_URL")
   username = config.db_user or os.environ.get("REDSHIFT_USER") 
   password = config.db_password or os.environ.get("REDSHIFT_PASSWORD")
-  engine = create_engine('redshift+redshift_connector://{}:{}@{}'.format(username, password, url))
+  engine = create_engine('redshift+psycopg2://{}:{}@{}'.format(username, password, url))
+
+  print("********************engine", engine)
+
+  try:
+    with engine.connect() as conn: conn.execute(text("SELECT 1"))
+    print("✅ Database connection successful")
+  except Exception as e:
+    print("❌ Database connection failed:", e); raise
+  
   return engine
+
+
 
 # get database,schema,table name from sql query
 def extract_database_schema_and_table(sql: str):
