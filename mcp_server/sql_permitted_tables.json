@@ -1,0 +1,5 @@
+{
+    "database":"dev",
+    "schema":"platinum",
+    "tables":["api__analytics__coupons","api__analytics__orders","api__analytics__customers","api__analytics__store_token"]
+}

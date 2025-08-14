@@ -1,0 +1,11 @@
+[project]
+name = "sql-mcp"
+version = "0.1.0"
+dependencies = [
+  "fastmcp",
+  "sqlalchemy",
+  "psycopg2-binary",
+  "sqlalchemy-redshift",
+  "redshift_connector",
+  "sqlparse"
+]

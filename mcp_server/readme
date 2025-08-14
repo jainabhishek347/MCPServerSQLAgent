@@ -1,0 +1,24 @@
+# Installation
+- install uv 
+
+# Run
+- Set database username and password in settings.py file
+- go to project dir
+- run -> uv run main.py
+
+# Claude setup
+Before running query in claude, follow these steps:
+- Add resource file in claude chat
+- Add prompt in claude chat
+- Enter your query
+
+# File details
+- tools.py -> MCP tools
+- resources.py -> MCP resources
+- prompt.py -> MCP prompt
+- settings.py -> settings file
+- main.py -> MCP main
+- server.py -> sets global mcp object
+- helper.py -> helper functions
+
+- sql_permitted_tables.json -> resource file for permitted tables
