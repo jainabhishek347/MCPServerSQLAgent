@@ -1,6 +1,11 @@
 from typing import Optional, Literal
-class ServerConfig():
-  db_url:str = 'localhost:5439/dev?sslmode=allow'
-  db_user:str = 'analytics_api' # 'analytics_api_dev'
-  db_password:str = '2WTdwC0LyMTr76d6jP' # 'xiZ8nQ90l4EKRtMWA1'
-  mcp_transport: Literal["stdio", "streamable-http"] = "streamable-http"
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
+
+class ServerConfig:
+    db_url: str = os.getenv("DB_URL")
+    db_user: str = os.getenv("DB_USER")
+    db_password: str = os.getenv("DB_PASSWORD")
+    mcp_transport: Literal["stdio", "streamable-http"] = "streamable-http"
