@@ -1,4 +1,5 @@
 from fastmcp import FastMCP
+from helper import read_schema_file
 
 # Initialize MCP server
 mcp = FastMCP(
@@ -6,4 +7,4 @@ mcp = FastMCP(
     instructions="Execute SQL queries and inspect table schema in AWS Redshift."
 )
 
-
+schemas = read_schema_file()

@@ -7,6 +7,7 @@ from settings import ServerConfig
 from sqlparse.sql import IdentifierList, Identifier
 from sqlparse.tokens import Keyword
 import os
+import yaml
 
 # regex to capture up to three dot-separated identifier parts (supports `quote`, "quote", [brackets], or plain names)
 IDENT_RE = re.compile(
@@ -18,9 +19,9 @@ IDENT_RE = re.compile(
 @lru_cache()
 def get_db_connection():
   config = ServerConfig()
-  url = config.db_url or os.environ.get("REDSHIFT_URL")
-  username = config.db_user or os.environ.get("REDSHIFT_USER") 
-  password = config.db_password or os.environ.get("REDSHIFT_PASSWORD")
+  url = config.db_url or os.environ.get("DB_URL")
+  username = config.db_user or os.environ.get("DB_USER") 
+  password = config.db_password or os.environ.get("DB_PASSWORD")
   engine = create_engine('redshift+psycopg2://{}:{}@{}'.format(username, password, url))
 
   print("********************engine", engine)
@@ -97,7 +98,28 @@ def parse_identifier(identifier: Identifier):
  #   print(q, "=>", extract_tables(q))
 
 
-def get_all_tables_schema():
+# read table schemas from given schema file and stores it in memory.
+def read_schema_file():
+    # Load YAML file
+    file = ServerConfig().schema_file
+    with open(file, "r") as f:
+        data = yaml.safe_load(f)
+    # Build mapping
+    table_mapping = {}
+
+    for model in data["models"]:
+        table_name = model["name"]
+        column_list = []
+        for col in model.get("columns", []):
+            column_list.append({
+                "column_name": col.get("name"),
+                "column_type": col.get("type"),
+                "column_description": col.get("description"),
+            })
+        table_mapping[table_name] = column_list
+    return table_mapping
+
+def get_all_tables_schema_from_database():
     print("Getting all tables schema")
     with open('sql_permitted_tables.json', 'r') as f:
         data = json.load(f)

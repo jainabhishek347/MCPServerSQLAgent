@@ -1,18 +1,30 @@
-from server import mcp
+from server import mcp, schemas
 from typing import Dict, List
 from sqlalchemy import text
-from helper import extract_database_schema_and_table, get_db_connection, get_all_tables_schema
+from helper import extract_database_schema_and_table, get_db_connection
 import os
 import json
 
-tables_schemas = get_all_tables_schema()
+@mcp.tool(name="get_tables_schema")
+def get_tables_schema(tables:list) -> Dict:
+  '''
+  Returns schema of a tables as a  dictionary. Each entry consists of:
+    Key: table name
+    Values: Dictionary. Each sub dictionary contains:
+      - column_name: name of a column
+      - column_type: type of cilumn
+      - column_description - descritpion of column values and purpose
 
-@mcp.tool(name="get_table_schema")
-def get_table_schema(table:str) -> List:
+  Examples:
+  - Single table schema : get_tables_schema(["api_analytics_orders"])
+  - Multiple tables schema : get_tables_schema(["api_analytics_orders", "api_analytics_products"])
+  Args:
+    tables: list of tables to get schema for
+  Returns:
+    Dictionary containing schema for each table in the input list.
   '''
-  Returns schema of a table as a list of dictionary with each entry has column name and column type
-  '''
-  return tables_schemas[table]  
+
+  return {t: schemas[t] for t in tables if t in schemas}
 
 @mcp.tool(name="run_sql_query")
 def run_sql_query(query:str) -> Dict:
@@ -40,7 +52,7 @@ def run_sql_query(query:str) -> Dict:
         return {"error": f"Database {database} access denied"}
     if data['schema'].upper() != schema:
         return {"error": f"Schema {schema} access denied in database"}
-    if not table in [t.upper() for t in data['tables']]:
+    if not table in [t.upper() for t in list(schemas.keys())]:
         return {"error": f"Table {table} access denied in schema {schema}"}      
 
   # run query

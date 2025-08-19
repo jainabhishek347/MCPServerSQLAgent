@@ -1,4 +1,4 @@
-from server import mcp
+from server import mcp, schemas 
 from typing import Any
 import json
 
@@ -9,5 +9,6 @@ def database_permitted_tables() -> Any:
   '''
   with open("sql_permitted_tables.json") as f:
     data = json.load(f)
+  data['tables'] = list(schemas.keys())
   return data
   
