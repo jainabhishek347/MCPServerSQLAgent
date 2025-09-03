@@ -49,13 +49,77 @@ cd <project-directory>
 
 ## Configuration
 
+### Environment Variables Setup
+
+#### Windows
+1. Using Command Prompt:
+```cmd
+setx DB_URL "your_database_url"
+setx DB_USER "your_database_user"
+setx DB_PASSWORD "your_database_password"
+```
+Or create a `.env` file in the project root:
+```plaintext
+DB_URL=your_database_url
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
+```
+
+#### macOS/Linux
+1. Using terminal (temporary):
+```bash
+export DB_URL="your_database_url"
+export DB_USER="your_database_user"
+export DB_PASSWORD="your_database_password"
+```
+
+2. For permanent setup (bash):
+```bash
+echo 'export DB_URL="your_database_url"' >> ~/.bashrc
+echo 'export DB_USER="your_database_user"' >> ~/.bashrc
+echo 'export DB_PASSWORD="your_database_password"' >> ~/.bashrc
+source ~/.bashrc
+```
+
+For zsh (macOS default):
+```bash
+echo 'export DB_URL="your_database_url"' >> ~/.zshrc
+echo 'export DB_USER="your_database_user"' >> ~/.zshrc
+echo 'export DB_PASSWORD="your_database_password"' >> ~/.zshrc
+source ~/.zshrc
+```
+
+Or create a `.env` file in the project root (recommended for all platforms):
+```plaintext
+DB_URL=your_database_url
+DB_USER=your_database_user
+DB_PASSWORD=your_database_password
+```
+
+### Running the Application
+
+#### Windows
+```cmd
+# Using Command Prompt
+python main.py
+
+# Using PowerShell
+python main.py
+```
+
+#### macOS/Linux
+```bash
+# Make sure environment variables are set
+python3 main.py
+```
+
 ### Database Settings
-Configure in `settings.py`:
+The application uses environment variables for database configuration. These are loaded in `settings.py`:
 ```python
 class ServerConfig:
-    db_url: str = ""
-    db_user: str = ""
-    db_password: str = ""
+    db_url: str = os.getenv('DB_URL', '')
+    db_user: str = os.getenv('DB_USER', '')
+    db_password: str = os.getenv('DB_PASSWORD', '')
     schema_file: str = "_api__analytics__models.yml"
 ```
 
