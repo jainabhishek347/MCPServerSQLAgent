@@ -97,9 +97,10 @@ DB_PASSWORD=your_database_password
 ```
 
 ### Running the Application
+``` cmd
+# uv run main.py
 
 #### Windows
-```cmd
 # Using Command Prompt
 python main.py
 
